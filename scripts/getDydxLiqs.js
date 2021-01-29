@@ -10,9 +10,9 @@ var router;
 let daiDec = web3.utils.toBN(10).pow(web3.utils.toBN(18));
 let usdcDec = web3.utils.toBN(10).pow(web3.utils.toBN(6));
 
-fs.readFile('./../abis/router.json', 'utf8', function(err, contents) {
+fs.readFile('./abis/router.json', 'utf8', function(err, contents) {
   router_abi = JSON.parse(contents);
-  fs.readFile('./../abis/dydx.json', 'utf8', function(err, contents) {
+  fs.readFile('./abis/dydx.json', 'utf8', function(err, contents) {
       dydx_abi = JSON.parse(contents);
       dydx = new web3.eth.Contract(dydx_abi, "0x1e0447b19bb6ecfdae1e4ae1694b0c3659614e4e");
       router = new web3.eth.Contract(router_abi, "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D");
@@ -119,9 +119,8 @@ async function quotes(router, sent, sent_amt, received, received_amt, blockNum) 
     }
 
     if (received == market_map['2']) {
-      receivedPrice =  web3.utils.toBN(
-        await router.methods.getAmountsOut(usdcDec, [received, market_map['0']]).call({}, blockNum)[1]
-      );
+      const res = await router.methods.getAmountsOut(usdcDec, [received, market_map['0']]).call({}, blockNum)
+      receivedPrice =  web3.utils.toBN(res[1]);
       fullReceieved = receivedPrice.mul(receieved_amt).div(usdcDec);
     } else if (sent == market_map['0']){
       fullReceieved = received_amt;

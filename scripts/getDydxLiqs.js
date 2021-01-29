@@ -1,5 +1,5 @@
 var Web3 = require('web3');
-var web3 = new Web3('ws://localhost:8546');
+var web3 = new Web3(process.env.URL || 'ws://localhost:8546');
 
 var fs = require('fs');
 
@@ -10,9 +10,9 @@ var router;
 let daiDec = web3.utils.toBN(10).pow(web3.utils.toBN(18));
 let usdcDec = web3.utils.toBN(10).pow(web3.utils.toBN(6));
 
-fs.readFile('./router.json', 'utf8', function(err, contents) {
+fs.readFile('./../abis/router.json', 'utf8', function(err, contents) {
   router_abi = JSON.parse(contents);
-  fs.readFile('./dydx.json', 'utf8', function(err, contents) {
+  fs.readFile('./../abis/dydx.json', 'utf8', function(err, contents) {
       dydx_abi = JSON.parse(contents);
       dydx = new web3.eth.Contract(dydx_abi, "0x1e0447b19bb6ecfdae1e4ae1694b0c3659614e4e");
       router = new web3.eth.Contract(router_abi, "0x7a250d5630B4cF539739dF2C5dAcb4c659F2488D");
